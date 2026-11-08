@@ -28,6 +28,10 @@ jobs:
           if [ ! -d /opt/theos ]; then
             sudo git clone --recursive https://github.com/theos/theos.git /opt/theos
           fi
+          # The project points its search paths at /opt/theos, but the
+          # MonkeyDev logos step resolves Theos as ~/theos.
+          ln -sfn /opt/theos "$HOME/theos"
+          test -f "$HOME/theos/bin/logos.pl"
           ls /opt/theos
 
       - name: Install ldid
