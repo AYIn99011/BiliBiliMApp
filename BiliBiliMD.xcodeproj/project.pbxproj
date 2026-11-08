@@ -81,6 +81,7 @@
 		BF9A72CB2F9469AB008EB74C /* NJChangePlaybackRateTool.h in Headers */ = {isa = PBXBuildFile; fileRef = BF9A714C2F9469AB008EB74C /* NJChangePlaybackRateTool.h */; };
 		BF9A72CC2F9469AB008EB74C /* NJChangePlaybackRateDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = BF9A714A2F9469AB008EB74C /* NJChangePlaybackRateDefine.h */; };
 		BF9A72CD2F9469AB008EB74C /* NJDiskCache.h in Headers */ = {isa = PBXBuildFile; fileRef = BF9A723C2F9469AB008EB74C /* NJDiskCache.h */; };
+		A10C96E1928FF002C0E4C0CC /* NJCacheCleaner.h in Headers */ = {isa = PBXBuildFile; fileRef = 97BBC3800115E24CA1B22D2A /* NJCacheCleaner.h */; };
 		BF9A72CE2F9469AB008EB74C /* NJAppCompatible_8_76_0_Handler.h in Headers */ = {isa = PBXBuildFile; fileRef = BF9A722F2F9469AB008EB74C /* NJAppCompatible_8_76_0_Handler.h */; };
 		BF9A72CF2F9469AB008EB74C /* NJCouponInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = BF9A71EA2F9469AB008EB74C /* NJCouponInfo.h */; };
 		BF9A72D02F9469AB008EB74C /* NJApiDataManger.h in Headers */ = {isa = PBXBuildFile; fileRef = BF9A71F32F9469AB008EB74C /* NJApiDataManger.h */; };
@@ -314,6 +315,7 @@
 		BF9A73B42F9469AB008EB74C /* NJSettingInjectDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9A72242F9469AB008EB74C /* NJSettingInjectDataProvider.m */; };
 		BF9A73B52F9469AB008EB74C /* NJUpperRcmdDataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9A71752F9469AB008EB74C /* NJUpperRcmdDataItem.m */; };
 		BF9A73B62F9469AB008EB74C /* NJDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9A723D2F9469AB008EB74C /* NJDiskCache.m */; };
+		E7AD66A4BC3D6CC6847E39FF /* NJCacheCleaner.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F6FEE185BF5F6D9C35B8516 /* NJCacheCleaner.m */; };
 		BF9A73B72F9469AB008EB74C /* mz_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = BF9A72632F9469AB008EB74C /* mz_os_posix.c */; };
 		BF9A73B82F9469AB008EB74C /* mz_zip_rw.c in Sources */ = {isa = PBXBuildFile; fileRef = BF9A72772F9469AB008EB74C /* mz_zip_rw.c */; };
 		BF9A73B92F9469AB008EB74C /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = BF9A72692F9469AB008EB74C /* mz_strm_mem.c */; };
@@ -631,6 +633,8 @@
 		BF9A723A2F9469AB008EB74C /* NJDailyTaskManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NJDailyTaskManager.m; sourceTree = "<group>"; };
 		BF9A723C2F9469AB008EB74C /* NJDiskCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NJDiskCache.h; sourceTree = "<group>"; };
 		BF9A723D2F9469AB008EB74C /* NJDiskCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NJDiskCache.m; sourceTree = "<group>"; };
+		97BBC3800115E24CA1B22D2A /* NJCacheCleaner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NJCacheCleaner.h; sourceTree = "<group>"; };
+		0F6FEE185BF5F6D9C35B8516 /* NJCacheCleaner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NJCacheCleaner.m; sourceTree = "<group>"; };
 		BF9A723E2F9469AB008EB74C /* NJDiskCacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NJDiskCacheManager.h; sourceTree = "<group>"; };
 		BF9A723F2F9469AB008EB74C /* NJDiskCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NJDiskCacheManager.m; sourceTree = "<group>"; };
 		BF9A72412F9469AB008EB74C /* MASCompositeConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
@@ -1413,6 +1417,15 @@
 			path = DiskCache;
 			sourceTree = "<group>";
 		};
+		ECCC7C624C76140107BA457C /* CacheCleaner */ = {
+			isa = PBXGroup;
+			children = (
+				97BBC3800115E24CA1B22D2A /* NJCacheCleaner.h */,
+				0F6FEE185BF5F6D9C35B8516 /* NJCacheCleaner.m */,
+			);
+			path = CacheCleaner;
+			sourceTree = "<group>";
+		};
 		BF9A72502F9469AB008EB74C /* Masonry */ = {
 			isa = PBXGroup;
 			children = (
@@ -1559,6 +1572,7 @@
 				BF9A72382F9469AB008EB74C /* AppCompatible */,
 				BF9A723B2F9469AB008EB74C /* DailyTaskManager */,
 				BF9A72402F9469AB008EB74C /* DiskCache */,
+				ECCC7C624C76140107BA457C /* CacheCleaner */,
 				BF9A72502F9469AB008EB74C /* Masonry */,
 				BF9A72542F9469AB008EB74C /* Pipeline */,
 				BF9A72572F9469AB008EB74C /* Share */,
@@ -1655,6 +1669,7 @@
 				BF9A72CB2F9469AB008EB74C /* NJChangePlaybackRateTool.h in Headers */,
 				BF9A72CC2F9469AB008EB74C /* NJChangePlaybackRateDefine.h in Headers */,
 				BF9A72CD2F9469AB008EB74C /* NJDiskCache.h in Headers */,
+				A10C96E1928FF002C0E4C0CC /* NJCacheCleaner.h in Headers */,
 				BF9A72CE2F9469AB008EB74C /* NJAppCompatible_8_76_0_Handler.h in Headers */,
 				BF9A72CF2F9469AB008EB74C /* NJCouponInfo.h in Headers */,
 				BF9A72D02F9469AB008EB74C /* NJApiDataManger.h in Headers */,
@@ -2062,6 +2077,7 @@
 				BF9A73B42F9469AB008EB74C /* NJSettingInjectDataProvider.m in Sources */,
 				BF9A73B52F9469AB008EB74C /* NJUpperRcmdDataItem.m in Sources */,
 				BF9A73B62F9469AB008EB74C /* NJDiskCache.m in Sources */,
+				E7AD66A4BC3D6CC6847E39FF /* NJCacheCleaner.m in Sources */,
 				BF9A73B72F9469AB008EB74C /* mz_os_posix.c in Sources */,
 				BF9A73B82F9469AB008EB74C /* mz_zip_rw.c in Sources */,
 				BF9A73B92F9469AB008EB74C /* mz_strm_mem.c in Sources */,

@@ -35,6 +35,8 @@
 #define NJ_AUTO_RECEIVE_COUPON_BIZ_ID @"autoReceiveCoupon"
 // 竖屏模式
 #define NJ_VERTICAL_SCREEN_MODE_BIZ_ID @"verticalScreenMode"
+// 一键清理缓存
+#define NJ_CLEAR_CACHE_BIZ_ID @"clearCache"
 // 分享数据
 #define NJ_SHARE_DATA_BIZ_ID @"shareData"
 // 版本

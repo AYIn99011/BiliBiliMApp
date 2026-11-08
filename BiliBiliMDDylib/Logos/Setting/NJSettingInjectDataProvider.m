@@ -47,6 +47,7 @@
                                                            cellId:NJ_SWITCH_CELL_ID
                                                             title:@"竖屏模式"
                                                                   on:NJ_VERTICAL_SCREEN_MODE_VALUE saveKey:NJ_VERTICAL_SCREEN_MODE_KEY]];
+    [datas addObject:[self clearCache]];
     [datas addObject:[[NJSettingSkullViewModel alloc] initWithBizId:NJ_SHARE_DATA_BIZ_ID
                                                              cellId:NJ_COMMON_CELL_ID
                                                               title:@"分享数据"]];
@@ -55,6 +56,15 @@
                                                              cellId:NJ_COMMON_CELL_ID
                                                               title:@"官网"]];
     return [datas copy];
+}
+
+/// 一键清理缓存（副标题由 NJSettingBizHandler 异步填充实际大小）
+- (NJSettingSkullViewModel *)clearCache {
+    NJSettingSkullViewModel *model = [[NJSettingSkullViewModel alloc] initWithBizId:NJ_CLEAR_CACHE_BIZ_ID
+                                                                             cellId:NJ_COMMON_CELL_ID
+                                                                              title:@"一键清理缓存"];
+    model.subTitle = @"计算中…";
+    return model;
 }
 
 /// 默认播放速度

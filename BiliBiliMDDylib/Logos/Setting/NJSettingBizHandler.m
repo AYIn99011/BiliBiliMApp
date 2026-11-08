@@ -13,6 +13,8 @@
 #import "NJInlineSettingViewController.h"
 #import "NJChangePlaybackRateTool.h"
 #import "NJSettingCache.h"
+#import "NJCacheCleaner.h"
+#import "SVProgressHUD.h"
 
 // 官网地址
 #define NJ_OFFICIAL_WEBSITE_URL_STR @"https://github.com/TouchFriend/BiliBiliMApp"
@@ -49,6 +51,7 @@
     self.dataProvider = [[NJSettingInjectDataProvider alloc] init];
     self.injectDatas = self.dataProvider.injectDatas;
     self.isRebootTip = NO;
+    [self refreshCacheSize];
 }
 
 - (void)initEventManager {
@@ -67,6 +70,11 @@
 
 - (void)handleBizWithViewModel:(NJSettingSkullViewModel *)viewModel {
     NSString *bizId = viewModel.bizId;
+    // 一键清理缓存
+    if ([bizId isEqualToString:NJ_CLEAR_CACHE_BIZ_ID]) {
+        [self handleClearCacheWithViewModel:viewModel];
+        return;
+    }
     // 分享数据
     if ([bizId isEqualToString:NJ_SHARE_DATA_BIZ_ID]) {
         [self.shareManager shareCacheFolder];
@@ -93,6 +101,65 @@
 }
 
 #pragma mark - Private Methods
+
+/// 一键清理缓存对应的 viewModel
+- (nullable NJSettingSkullViewModel *)clearCacheViewModel {
+    for (NJSettingSkullViewModel *model in self.injectDatas) {
+        if ([model.bizId isEqualToString:NJ_CLEAR_CACHE_BIZ_ID]) {
+            return model;
+        }
+    }
+    return nil;
+}
+
+/// 异步统计缓存大小并刷新副标题
+- (void)refreshCacheSize {
+    __weak typeof(self) weakSelf = self;
+    [NJCacheCleaner calculateCacheSizeWithCompletion:^(unsigned long long size) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        [strongSelf clearCacheViewModel].subTitle = [NJCacheCleaner formattedSize:size];
+        [strongSelf.tableView reloadData];
+    }];
+}
+
+/// 点击一键清理缓存：先确认，再后台清理并汇报释放大小。
+/// 离线下载、账号与插件设置不在清理范围内（见 NJCacheCleaner 白名单）。
+- (void)handleClearCacheWithViewModel:(NJSettingSkullViewModel *)viewModel {
+    NSString *currentSize = viewModel.subTitle.length > 0 ? viewModel.subTitle : @"计算中…";
+    NSString *message = [NSString stringWithFormat:
+                         @"当前缓存 %@，清理后图片等内容需重新加载。\n离线下载、账号和设置不会受影响。", currentSize];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"清理缓存"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+                                               style:UIAlertActionStyleCancel
+                                             handler:nil]];
+    __weak typeof(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"清理"
+                                               style:UIAlertActionStyleDestructive
+                                             handler:^(UIAlertAction * _Nonnull action) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        [SVProgressHUD showWithStatus:@"正在清理…"];
+        [NJCacheCleaner clearCacheWithCompletion:^(unsigned long long freedSize,
+                                                     unsigned long long remainingSize) {
+            if (freedSize > 0) {
+                [SVProgressHUD showSuccessWithStatus:
+                    [NSString stringWithFormat:@"已清理 %@", [NJCacheCleaner formattedSize:freedSize]]];
+            } else {
+                [SVProgressHUD showSuccessWithStatus:@"已是干净状态"];
+            }
+            viewModel.subTitle = [NJCacheCleaner formattedSize:remainingSize];
+            [strongSelf.tableView reloadData];
+        }];
+    }]];
+    [self.settingViewController presentViewController:alert animated:YES completion:nil];
+}
 
 /// 点击默认播放速度
 /// - Parameter viewModel: 数据
