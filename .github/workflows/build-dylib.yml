@@ -1,0 +1,73 @@
+name: Build dylib
+
+# Builds ONLY the BiliBiliMDDylib target and publishes the single
+# libBiliBiliMDDylib.dylib as an artifact. The app target, the
+# deshelled target app and packaging are intentionally not involved:
+# drop the dylib into an existing IPA under Frameworks/ and re-sign.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/clear-cache
+
+jobs:
+  build-dylib:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app
+          xcodebuild -version
+
+      - name: Install theos
+        run: |
+          if [ ! -d /opt/theos ]; then
+            sudo git clone --recursive https://github.com/theos/theos.git /opt/theos
+          fi
+          ls /opt/theos
+
+      - name: Install ldid
+        run: brew install ldid
+
+      - name: Install MonkeyDev
+        run: |
+          sudo /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/AloneMonkey/MonkeyDev/master/bin/md-install)"
+          test -x /opt/MonkeyDev/bin/md
+          ls /opt/MonkeyDev/Frameworks
+
+      - name: Build BiliBiliMDDylib (Release, iphoneos)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project BiliBiliMD.xcodeproj \
+            -target BiliBiliMDDylib \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Verify and stage dylib
+        run: |
+          set -euo pipefail
+          DYLIB="$(find build/DerivedData/Build/Products -name 'libBiliBiliMDDylib.dylib' -type f | head -n 1)"
+          test -n "$DYLIB"
+          echo "Built: $DYLIB"
+          file "$DYLIB"
+          otool -D "$DYLIB"
+          mkdir -p out
+          cp "$DYLIB" out/libBiliBiliMDDylib.dylib
+          ls -lh out/
+
+      - name: Upload dylib artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libBiliBiliMDDylib
+          path: out/libBiliBiliMDDylib.dylib
+          if-no-files-found: error
