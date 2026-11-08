@@ -60,7 +60,7 @@ jobs:
       - name: Verify and stage dylib
         run: |
           set -euo pipefail
-          DYLIB="$(find "$HOME/Library/Developer/Xcode/DerivedData" -name 'libBiliBiliMDDylib.dylib' -path '*Release-iphoneos*' -type f | head -n 1)"
+          DYLIB="$(find "$PWD/build" "$HOME/Library/Developer/Xcode/DerivedData" -name 'libBiliBiliMDDylib.dylib' -path '*Release-iphoneos*' -type f 2>/dev/null | head -n 1 || true)"
           test -n "$DYLIB"
           echo "Built: $DYLIB"
           file "$DYLIB"
