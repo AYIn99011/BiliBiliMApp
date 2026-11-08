@@ -60,11 +60,18 @@ jobs:
       - name: Verify and stage dylib
         run: |
           set -euo pipefail
-          DYLIB="$(find "$PWD/build" "$HOME/Library/Developer/Xcode/DerivedData" -name 'libBiliBiliMDDylib.dylib' -path '*Release-iphoneos*' -type f 2>/dev/null | head -n 1 || true)"
-          test -n "$DYLIB"
+          DYLIB="build/Release-iphoneos/libBiliBiliMDDylib.dylib"
+          if [ ! -f "$DYLIB" ]; then
+            DYLIB="$(find "$PWD/build" "$HOME/Library/Developer/Xcode/DerivedData" -name 'libBiliBiliMDDylib.dylib' -path '*Release-iphoneos*' -not -path '*.dSYM/*' -type f 2>/dev/null | head -n 1 || true)"
+          fi
+          test -n "$DYLIB" && test -f "$DYLIB"
           echo "Built: $DYLIB"
           file "$DYLIB"
-          otool -D "$DYLIB"
+          if file "$DYLIB" | grep -qi 'dSYM'; then
+            echo "ERROR: matched file is a dSYM, not the dylib" >&2
+            exit 1
+          fi
+          otool -D "$DYLIB" | grep -F '@executable_path/Frameworks/libBiliBiliMDDylib.dylib'
           mkdir -p out
           cp "$DYLIB" out/libBiliBiliMDDylib.dylib
           ls -lh out/
