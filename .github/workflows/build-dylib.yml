@@ -47,7 +47,6 @@ jobs:
             -target BiliBiliMDDylib \
             -configuration Release \
             -sdk iphoneos \
-            -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
@@ -56,7 +55,7 @@ jobs:
       - name: Verify and stage dylib
         run: |
           set -euo pipefail
-          DYLIB="$(find build/DerivedData/Build/Products -name 'libBiliBiliMDDylib.dylib' -type f | head -n 1)"
+          DYLIB="$(find "$HOME/Library/Developer/Xcode/DerivedData" -name 'libBiliBiliMDDylib.dylib' -path '*Release-iphoneos*' -type f | head -n 1)"
           test -n "$DYLIB"
           echo "Built: $DYLIB"
           file "$DYLIB"
